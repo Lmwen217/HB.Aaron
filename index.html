@@ -201,17 +201,17 @@
         }
         .match-hint.done { opacity: 0; }
 
+        /* ===== 底部工具栏：只保留关闭按钮，背景完全透明 ===== */
         .toolbar {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
-            padding: 12px 0 4px;
+            padding: 8px 0 2px;
             flex-shrink: 0;
-            border-top: 1px solid #f0e8e0;
-            margin-top: 6px;
-            background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(4px);
-            border-radius: 30px;
+            margin-top: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 0;
         }
         .tool-btn {
             display: flex;
@@ -341,7 +341,6 @@
             <span>Birthday ✨</span>
         </div>
         <div class="phone-content">
-            <!-- ★★★ 标题已改为“许个愿吧” ★★★ -->
             <div class="header-text" id="headerText">
                 <span class="emoji">🎂</span> 许个愿吧 <span class="emoji">✨</span>
             </div>
@@ -402,11 +401,15 @@
                 </div>
                 <div class="match-hint" id="matchHint">⟶ 向右拖动火柴</div>
             </div>
+
+            <!-- ★★★ 底部工具栏：只保留“关闭”按钮，背景完全透明 ★★★ -->
             <div class="toolbar">
-                <button class="tool-btn" id="btnSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span class="label">发送</span></button>
-                <button class="tool-btn" id="btnClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg><span class="label">关闭</span></button>
-                <button class="tool-btn" id="btnMake" aria-label="Make"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="2"/></svg><span class="label">制作</span></button>
+                <button class="tool-btn" id="btnClose" aria-label="Close">
+                    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    <span class="label">关闭</span>
+                </button>
             </div>
+
             <div class="blessing-container" id="blessingContainer"></div>
         </div>
     </div>
@@ -535,7 +538,6 @@
                 matchHint.classList.add('done');
                 playScratchSound();
 
-                // 提前加载音频（修复微信首次播放）
                 if (!bgAudio) {
                     bgAudio = new Audio();
                     bgAudio.src = 'birthday.mp3';
@@ -812,7 +814,6 @@
                     bgAudio.volume = 0.5;
                     bgAudio.load();
                     bgAudio.play().catch(() => {
-                        // 如果第一次播放失败，监听加载完成再播
                         const onReady = function() {
                             bgAudio.play().catch(() => {});
                             bgAudio.removeEventListener('canplaythrough', onReady);
@@ -837,7 +838,6 @@
                 body.classList.remove('party');
                 phone.classList.remove('party-mode');
                 partyBgText.classList.remove('show');
-                // ★★★ 重置标题也改为“许个愿吧” ★★★
                 headerText.innerHTML = '<span class="emoji">🎂</span> 许个愿吧 <span class="emoji">✨</span>';
                 matchHead.classList.remove('burning');
                 matchStick.style.position = 'absolute';
@@ -862,26 +862,9 @@
                 matchStick.style.height = '';
                 bgAudio = null;
             }
-            function handleSend() {
-                const btn = document.getElementById('btnSend');
-                btn.style.transform = 'scale(0.85)';
-                setTimeout(() => btn.style.transform = '', 200);
-                if (isLit) {
-                    const cakeRect = cakeWrapper.getBoundingClientRect();
-                    const phoneRect = phone.getBoundingClientRect();
-                    const cx = cakeRect.left - phoneRect.left + cakeRect.width / 2;
-                    const cy = cakeRect.top - phoneRect.top + cakeRect.height / 2;
-                    for (let i = 0; i < 8; i++) setTimeout(() => createBlessingTag(cx, cy), i * 80);
-                }
-            }
-            function handleMake() {
-                handleClose();
-                setTimeout(() => {
-                    matchHint.textContent = '✨ 重新开始！拖动火柴 ✨';
-                    matchHint.style.opacity = '1';
-                    setTimeout(() => { matchHint.textContent = '⟶ 向右拖动火柴'; }, 1800);
-                }, 300);
-            }
+
+            // ★★★ 只绑定关闭按钮，发送和制作已移除 ★★★
+            document.getElementById('btnClose').addEventListener('click', handleClose);
 
             function init() {
                 resizeCanvas();
@@ -892,9 +875,6 @@
                 track.addEventListener('touchstart', startDrag, { passive: false });
                 document.addEventListener('touchmove', moveDrag, { passive: false });
                 document.addEventListener('touchend', endDrag, { passive: false });
-                document.getElementById('btnClose').addEventListener('click', handleClose);
-                document.getElementById('btnSend').addEventListener('click', handleSend);
-                document.getElementById('btnMake').addEventListener('click', handleMake);
                 window.addEventListener('resize', () => { getTrackWidth(); });
                 getTrackWidth();
                 console.log('🎂 Aaron 23岁生日祝福已准备 — 拖动火柴点燃蜡烛！');
