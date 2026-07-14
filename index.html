@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Aaron · 23岁生日快乐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f5e6d3;
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            transition: background 0.8s ease;
+            padding: 16px;
+        }
+        body.party {
+            background: linear-gradient(135deg, #ffe0ec 0%, #ffb6c9 40%, #ff8fab 100%);
+        }
+        .phone {
+            width: 400px;
+            max-width: 100%;
+            height: 780px;
+            max-height: 95vh;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15), 0 0 0 2px rgba(255,255,255,0.8) inset;
+            padding: 24px 20px 16px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.6s ease;
+        }
+        .phone-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-color: #fce4d6;
+            background-image: url('https://i.ibb.co/jk6mFHQB/Image-20260714100446-103-2.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            transition: opacity 1s ease;
+            pointer-events: none;
+            border-radius: 40px;
+        }
+        .phone.party-mode .phone-bg { opacity: 0.25; }
+        .phone-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .header-text {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #7a4b3a;
+            letter-spacing: 0.5px;
+            padding: 4px 0 10px;
+            flex-shrink: 0;
+            transition: opacity 0.4s ease;
+            line-height: 1.4;
+            text-shadow: 0 1px 4px rgba(255,255,255,0.6);
+        }
+        .header-text .emoji { display: inline-block; margin: 0 4px; }
+        .cake-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 0;
+        }
+        .cake-wrapper {
+            width: 200px;
+            height: 240px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .cake-wrapper svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: opacity 1s ease;
+        }
+        .flame-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+        .flame {
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: radial-gradient(ellipse at 30% 20%, #ffdd44, #ff8800 60%, #cc3300);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.4);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            filter: blur(0.5px);
+            box-shadow: 0 0 20px 8px rgba(255,160,0,0.5);
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+        .flame.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            animation: flicker 0.15s infinite alternate ease-in-out;
+        }
+        @keyframes flicker {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+            100% { transform: translate(-50%, -50%) scale(1.08) translate(1px, -3px) rotate(3deg); }
+        }
+        .flame-pos-1 { left: 36.5%; top: 26%; }
+        .flame-pos-2 { left: 50%;   top: 23.5%; }
+        .flame-pos-3 { left: 63.5%; top: 26%; }
+
+        .match-area {
+            width: 100%;
+            padding: 12px 0 4px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+        .match-track {
+            width: 100%;
+            max-width: 280px;
+            height: 48px;
+            background: #f0e3d8;
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+            touch-action: none;
+            transition: opacity 0.5s ease;
+        }
+        .match-stick {
+            position: absolute;
+            left: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 22px;
+            background: #deb887;
+            border-radius: 20px 4px 4px 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 2px;
+            touch-action: none;
+            will-change: left, top, transform, opacity;
+            z-index: 5;
+            transition: left 0.05s linear, top 0.3s ease, transform 0.3s ease, opacity 0.5s ease;
+        }
+        .match-head {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #e07040, #a04020 80%);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .match-head.burning {
+            background: radial-gradient(circle at 40% 30%, #ffcc44, #ff6600 70%, #cc3300);
+            box-shadow: 0 0 30px 12px rgba(255,120,0,0.7);
+            animation: burnGlow 0.4s infinite alternate ease-in-out;
+        }
+        @keyframes burnGlow {
+            0% { box-shadow: 0 0 20px 8px rgba(255,120,0,0.6); }
+            100% { box-shadow: 0 0 40px 20px rgba(255,80,0,0.9); }
+        }
+        .match-hint {
+            font-size: 12px;
+            color: #b59580;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+            transition: opacity 0.4s;
+        }
+        .match-hint.done { opacity: 0; }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0 4px;
+            flex-shrink: 0;
+            border-top: 1px solid #f0e8e0;
+            margin-top: 6px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(4px);
+            border-radius: 30px;
+        }
+        .tool-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: #7a5a4a;
+            cursor: pointer;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: background 0.2s, transform 0.15s;
+            gap: 2px;
+            font-weight: 500;
+        }
+        .tool-btn:hover { background: rgba(120,80,60,0.08); }
+        .tool-btn:active { transform: scale(0.92); }
+        .tool-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: none;
+            stroke: #7a5a4a;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .tool-btn .label { font-size: 11px; opacity: 0.7; }
+
+        .blessing-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 20;
+        }
+        .blessing-tag {
+            position: absolute;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #4a2a1a;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            white-space: nowrap;
+            opacity: 0;
+            transform: scale(0.2) translate(0,0);
+            pointer-events: none;
+            will-change: transform, opacity;
+            font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .party-bg-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+            font-size: 48px;
+            font-weight: 800;
+            color: rgba(255,100,130,0.12);
+            letter-spacing: 6px;
+            text-shadow: 0 0 40px rgba(255,150,180,0.15);
+            transform: rotate(-6deg) scale(1.1);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            line-height: 1.2;
+            text-align: center;
+            padding: 20px;
+        }
+        .party-bg-text.show { opacity: 1; }
+        .party-bg-text span { display: block; }
+
+        #flame-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        #flame-canvas.active { opacity: 1; transition: opacity 0.6s ease; }
+        .phone.party-mode #flame-canvas {
+            opacity: 0 !important;
+            transition: opacity 1s ease;
+        }
+
+        @media (max-width: 440px) {
+            .phone { border-radius: 28px; padding: 18px 14px 12px; height: 95vh; }
+            .cake-wrapper { width: 160px; height: 190px; }
+            .header-text { font-size: 15px; }
+            .match-track { max-width: 220px; height: 40px; }
+            .match-stick { width: 50px; height: 18px; }
+            .match-head { width: 18px; height: 18px; }
+            .tool-btn svg { width: 22px; height: 22px; }
+            .party-bg-text { font-size: 32px; }
+            .blessing-tag { font-size: 13px; padding: 6px 14px; }
+            .phone-bg { opacity: 0.35; }
+        }
+        @media (max-width: 360px) {
+            .cake-wrapper { width: 130px; height: 155px; }
+            .header-text { font-size: 13px; }
+            .match-track { max-width: 170px; height: 34px; }
+            .match-stick { width: 40px; height: 15px; }
+            .match-head { width: 15px; height: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone" id="phoneCard">
+        <div class="phone-bg" id="phoneBg"></div>
+        <div class="party-bg-text" id="partyBgText">
+            <span>✨ Happy</span>
+            <span>Birthday ✨</span>
+        </div>
+        <div class="phone-content">
+            <!-- ★★★ 标题已改为“许个愿吧” ★★★ -->
+            <div class="header-text" id="headerText">
+                <span class="emoji">🎂</span> 许个愿吧 <span class="emoji">✨</span>
+            </div>
+            <div class="cake-area" id="cakeArea">
+                <div class="cake-wrapper" id="cakeWrapper">
+                    <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="100" cy="225" rx="70" ry="8" fill="rgba(0,0,0,0.06)" />
+                        <rect x="30" y="160" width="140" height="50" rx="6" fill="#f5cba0" stroke="#e8b48c" stroke-width="1.5" />
+                        <rect x="30" y="168" width="140" height="4" rx="2" fill="#e8b48c" opacity="0.4" />
+                        <rect x="30" y="180" width="140" height="4" rx="2" fill="#e8b48c" opacity="0.4" />
+                        <rect x="30" y="192" width="140" height="4" rx="2" fill="#e8b48c" opacity="0.4" />
+                        <ellipse cx="100" cy="162" rx="72" ry="10" fill="#fce4d6" stroke="#f0d0b8" stroke-width="1" />
+                        <circle cx="40" cy="162" r="6" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="70" cy="158" r="7" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="100" cy="156" r="8" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="130" cy="158" r="7" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="160" cy="162" r="6" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <rect x="50" y="112" width="100" height="50" rx="6" fill="#f5d0b0" stroke="#e8b48c" stroke-width="1.5" />
+                        <rect x="50" y="120" width="100" height="3" rx="1.5" fill="#e8b48c" opacity="0.3" />
+                        <rect x="50" y="130" width="100" height="3" rx="1.5" fill="#e8b48c" opacity="0.3" />
+                        <rect x="50" y="140" width="100" height="3" rx="1.5" fill="#e8b48c" opacity="0.3" />
+                        <ellipse cx="100" cy="114" rx="54" ry="8" fill="#fce4d6" stroke="#f0d0b8" stroke-width="1" />
+                        <circle cx="58" cy="114" r="5" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="80" cy="111" r="6" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="100" cy="109" r="7" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="120" cy="111" r="6" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="142" cy="114" r="5" fill="#fce4d6" stroke="#f0d0b8" stroke-width="0.8" />
+                        <circle cx="80" cy="105" r="3.5" fill="#ffb6b9" />
+                        <circle cx="95" cy="102" r="3" fill="#b5d8f7" />
+                        <circle cx="110" cy="104" r="3.5" fill="#f7d794" />
+                        <circle cx="125" cy="106" r="3" fill="#f7b5b5" />
+                        <rect x="68" y="74" width="10" height="38" rx="2" fill="#f7b5b5" stroke="#e89898" stroke-width="1" />
+                        <rect x="68" y="74" width="10" height="4" rx="1" fill="#fcd5d5" />
+                        <line x1="73" y1="74" x2="73" y2="68" stroke="#5a3a2a" stroke-width="1.5" stroke-linecap="round" />
+                        <rect x="94" y="66" width="12" height="46" rx="2" fill="#f7d794" stroke="#e8c080" stroke-width="1" />
+                        <rect x="94" y="66" width="12" height="4" rx="1" fill="#fce8b8" />
+                        <line x1="100" y1="66" x2="100" y2="59" stroke="#5a3a2a" stroke-width="1.5" stroke-linecap="round" />
+                        <rect x="122" y="74" width="10" height="38" rx="2" fill="#b5d8f7" stroke="#8ab8e0" stroke-width="1" />
+                        <rect x="122" y="74" width="10" height="4" rx="1" fill="#d4eaf8" />
+                        <line x1="127" y1="74" x2="127" y2="68" stroke="#5a3a2a" stroke-width="1.5" stroke-linecap="round" />
+                        <circle cx="73" cy="112" r="2" fill="#e89898" />
+                        <circle cx="100" cy="112" r="2.5" fill="#e8c080" />
+                        <circle cx="127" cy="112" r="2" fill="#8ab8e0" />
+                    </svg>
+                    <div class="flame-container" id="flameContainer">
+                        <div class="flame flame-pos-1" id="flame1"></div>
+                        <div class="flame flame-pos-2" id="flame2"></div>
+                        <div class="flame flame-pos-3" id="flame3"></div>
+                    </div>
+                    <canvas id="flame-canvas"></canvas>
+                </div>
+            </div>
+            <div class="match-area" id="matchArea">
+                <div class="match-track" id="matchTrack">
+                    <div class="match-stick" id="matchStick">
+                        <div class="match-head" id="matchHead"></div>
+                    </div>
+                </div>
+                <div class="match-hint" id="matchHint">⟶ 向右拖动火柴</div>
+            </div>
+            <div class="toolbar">
+                <button class="tool-btn" id="btnSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg><span class="label">发送</span></button>
+                <button class="tool-btn" id="btnClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg><span class="label">关闭</span></button>
+                <button class="tool-btn" id="btnMake" aria-label="Make"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="2"/></svg><span class="label">制作</span></button>
+            </div>
+            <div class="blessing-container" id="blessingContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // ★★★ 祝福语列表（30 条精选）★★★
+        // ============================================================
+        const BLESSINGS = [
+            '生日快乐🎂', '天天开心✨', '心想事成🎉',
+            '万事胜意🌟', '暴富暴帅💰', '前程似锦🚀',
+            '平安喜乐❤️', '未来可期✨', '光芒万丈☀️',
+            '永远年轻🎈', '好运连连🍀', '升职加薪💼',
+            '工作顺利📈', '早日暴富🏦', '职场新星⭐',
+            '永远18岁🎂', '乘风破浪🌊', '闪闪发光💎',
+            '健康平安🍎', '幸福美满💕', '梦想成真🌙',
+            '被爱包围🥰', '活力满满💪', '天天好运🍀',
+            '笑口常开😊', '前程万里🌈', '心想事成🎯',
+            '做自己🌟', '人间值得🌸', '23岁正青春🎉'
+        ];
+
+        const PASTEL_COLORS = [
+            '#FFD1DC', '#FFE5B4', '#B5EAD7', '#C7CEEA',
+            '#F5B7B1', '#D5F5E3', '#FCF3CF', '#D6EAF8',
+            '#FADBD8', '#D5D8DC', '#E8DAEF', '#A9DFBF',
+            '#F9E79F', '#AED6F1', '#F5B7B1', '#D2B4DE'
+        ];
+
+        (function(){
+            'use strict';
+            const phone = document.getElementById('phoneCard');
+            const body = document.body;
+            const headerText = document.getElementById('headerText');
+            const matchTrack = document.getElementById('matchTrack');
+            const matchStick = document.getElementById('matchStick');
+            const matchHead = document.getElementById('matchHead');
+            const matchHint = document.getElementById('matchHint');
+            const matchArea = document.getElementById('matchArea');
+            const flame1 = document.getElementById('flame1');
+            const flame2 = document.getElementById('flame2');
+            const flame3 = document.getElementById('flame3');
+            const canvas = document.getElementById('flame-canvas');
+            const ctx = canvas.getContext('2d');
+            const blessingContainer = document.getElementById('blessingContainer');
+            const partyBgText = document.getElementById('partyBgText');
+            const cakeSvg = document.querySelector('.cake-wrapper svg');
+            const flameContainer = document.getElementById('flameContainer');
+            const cakeWrapper = document.getElementById('cakeWrapper');
+
+            let isLit = false, isBurning = false, matchDragging = false, matchX = 4;
+            const trackPadding = 4, stickWidth = 60;
+            let trackWidth = 0;
+            let particles = [], particleCount = 0, animFrameId = null, canvasReady = false;
+            let burstActive = false, burstInterval = null, audioCtx = null, bgAudio = null, particleSpawnInterval = null;
+            let musicStarted = false;
+
+            function resizeCanvas() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                canvas.style.width = rect.width + 'px';
+                canvas.style.height = rect.height + 'px';
+                ctx.scale(dpr, dpr);
+                canvasReady = true;
+            }
+            window.addEventListener('resize', resizeCanvas);
+
+            function getTrackWidth() {
+                const rect = matchTrack.getBoundingClientRect();
+                trackWidth = rect.width - trackPadding * 2 - stickWidth;
+                if (trackWidth < 0) trackWidth = 0;
+                return trackWidth;
+            }
+
+            function updateMatchPosition(clientX) {
+                if (!matchDragging || isLit) return;
+                const rect = matchTrack.getBoundingClientRect();
+                let x = clientX - rect.left - trackPadding - stickWidth / 2;
+                x = Math.max(0, Math.min(trackWidth, x));
+                matchX = x + trackPadding;
+                matchStick.style.left = matchX + 'px';
+                if (x >= trackWidth * 0.95) {
+                    igniteMatch();
+                }
+            }
+
+            function startDrag(e) {
+                if (isLit) return;
+                e.preventDefault();
+                matchDragging = true;
+                const pos = getEventPos(e);
+                updateMatchPosition(pos.x);
+            }
+            function moveDrag(e) {
+                if (!matchDragging || isLit) return;
+                e.preventDefault();
+                const pos = getEventPos(e);
+                updateMatchPosition(pos.x);
+            }
+            function endDrag(e) {
+                if (matchDragging) {
+                    matchDragging = false;
+                    if (!isLit) {
+                        const x = parseFloat(matchStick.style.left) || 4;
+                        if (x < trackWidth * 0.5) matchStick.style.left = '4px';
+                        else matchStick.style.left = Math.min(x, trackWidth * 0.7 + 4) + 'px';
+                    }
+                }
+            }
+            function getEventPos(e) {
+                if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                return { x: e.clientX, y: e.clientY };
+            }
+
+            // ----- 火柴擦燃 -----
+            function igniteMatch() {
+                if (isLit) return;
+                getAudioContext().resume();
+
+                isLit = true;
+                isBurning = true;
+                matchDragging = false;
+                matchHead.classList.add('burning');
+                matchHint.textContent = '🔥 点燃了！';
+                matchHint.classList.add('done');
+                playScratchSound();
+
+                // 提前加载音频（修复微信首次播放）
+                if (!bgAudio) {
+                    bgAudio = new Audio();
+                    bgAudio.src = 'birthday.mp3';
+                    bgAudio.loop = true;
+                    bgAudio.volume = 0.5;
+                    bgAudio.load();
+                }
+
+                matchTrack.style.transition = 'opacity 0.5s ease';
+                matchTrack.style.opacity = '0';
+
+                const startRect = matchStick.getBoundingClientRect();
+                matchStick.style.position = 'fixed';
+                matchStick.style.left = startRect.left + 'px';
+                matchStick.style.top = startRect.top + 'px';
+                matchStick.style.width = '60px';
+                matchStick.style.height = '22px';
+                matchStick.style.transition = 'left 0.5s ease, top 0.5s ease, opacity 0.8s ease';
+                void matchStick.offsetWidth;
+
+                sequenceLightCandles();
+            }
+
+            // ----- 依次点燃蜡烛 -----
+            function sequenceLightCandles() {
+                const cakeRect = cakeWrapper.getBoundingClientRect();
+                const stickW = 60, stickH = 22;
+                const candleX = [0.365, 0.50, 0.635];
+                const candleY = [0.26, 0.235, 0.26];
+                const targets = candleX.map((x, i) => ({
+                    left: cakeRect.left + cakeRect.width * x - stickW / 2,
+                    top: cakeRect.top + cakeRect.height * candleY[i] - 8
+                }));
+
+                let currentIndex = 0;
+                const flames = [flame1, flame2, flame3];
+
+                function moveToNext() {
+                    if (currentIndex >= targets.length) {
+                        setTimeout(() => {
+                            enterPartyMode();
+                            startBlessingBurst();
+                        }, 300);
+                        return;
+                    }
+
+                    const target = targets[currentIndex];
+                    matchStick.style.left = target.left + 'px';
+                    matchStick.style.top = target.top + 'px';
+
+                    setTimeout(() => {
+                        const flame = flames[currentIndex];
+                        flame.classList.add('active');
+                        spawnCandleParticles(currentIndex);
+                        if (currentIndex === 2) playPopSound();
+
+                        currentIndex++;
+                        setTimeout(moveToNext, 180);
+                    }, 510);
+                }
+
+                moveToNext();
+            }
+
+            // ----- 粒子系统 -----
+            function spawnCandleParticles(index) {
+                const cx = 0.5 + (index - 1) * 0.14;
+                const cy = 0.15 + (index === 1 ? 0.02 : 0);
+                for (let i = 0; i < 30; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 1.2 + Math.random() * 3.5;
+                    const size = 4 + Math.random() * 10;
+                    particles.push({
+                        x: cx, y: cy,
+                        vx: Math.cos(angle) * speed * 0.012,
+                        vy: Math.sin(angle) * speed * 0.012 - 0.008,
+                        life: 1.0,
+                        decay: 0.006 + Math.random() * 0.012,
+                        size: size,
+                        color: `hsl(${30 + Math.random() * 30}, 100%, ${60 + Math.random() * 30}%)`,
+                        type: 'flame'
+                    });
+                }
+                particleCount += 30;
+            }
+            function spawnRandomParticle() {
+                if (!isLit) return;
+                const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.2;
+                const speed = 0.8 + Math.random() * 2.2;
+                const cx = 0.5 + (Math.random() - 0.5) * 0.2;
+                const cy = 0.1 + Math.random() * 0.1;
+                particles.push({
+                    x: cx, y: cy,
+                    vx: Math.cos(angle) * speed * 0.01 + (Math.random() - 0.5) * 0.008,
+                    vy: Math.sin(angle) * speed * 0.01 - 0.012 - Math.random() * 0.01,
+                    life: 1.0,
+                    decay: 0.005 + Math.random() * 0.015,
+                    size: 3 + Math.random() * 8,
+                    color: `hsl(${25 + Math.random() * 35}, 100%, ${55 + Math.random() * 35}%)`,
+                    type: 'flame'
+                });
+                particleCount++;
+                if (particleCount > 800) { particles.splice(0, 200); particleCount -= 200; }
+            }
+            function animateParticles() {
+                if (!canvasReady) { animFrameId = requestAnimationFrame(animateParticles); return; }
+                const rect = canvas.parentElement.getBoundingClientRect();
+                const w = rect.width, h = rect.height;
+                ctx.clearRect(0, 0, w, h);
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy; p.vy += 0.0004;
+                    p.life -= p.decay; p.size *= 0.998;
+                    if (p.life <= 0 || p.size < 0.3) { particles.splice(i,1); particleCount--; continue; }
+                    const alpha = p.life * 0.9;
+                    const x = p.x * w, y = p.y * h, s = p.size * p.life * 1.2;
+                    ctx.globalAlpha = alpha;
+                    const grad = ctx.createRadialGradient(x, y, 0, x, y, s);
+                    grad.addColorStop(0, p.color);
+                    grad.addColorStop(0.5, p.color.replace(')', ',0.6)').replace('hsl', 'hsla'));
+                    grad.addColorStop(1, 'rgba(255,100,0,0)');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath(); ctx.arc(x, y, s, 0, Math.PI * 2); ctx.fill();
+                    ctx.globalAlpha = alpha * 0.6;
+                    ctx.beginPath(); ctx.arc(x, y, s * 0.3, 0, Math.PI * 2); ctx.fillStyle = '#fffbe6'; ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+                if (isLit && particles.length < 500 && Math.random() < 0.3) spawnRandomParticle();
+                animFrameId = requestAnimationFrame(animateParticles);
+            }
+
+            // ----- 派对模式（淡出动画）-----
+            function enterPartyMode() {
+                body.classList.add('party');
+                phone.classList.add('party-mode');
+                partyBgText.classList.add('show');
+                headerText.innerHTML = '🎉✨生日快乐，阿冠🎂步入23岁啦✨🎉';
+                matchHint.style.opacity = '0';
+
+                if (cakeSvg) cakeSvg.style.opacity = '0';
+                if (flameContainer) flameContainer.style.opacity = '0';
+                matchStick.style.opacity = '0';
+                if (matchArea) matchArea.style.opacity = '0';
+            }
+
+            // ----- 无限弹幕 + 音乐同步启动 -----
+            function startBlessingBurst() {
+                if (burstActive) return;
+                burstActive = true;
+
+                if (!musicStarted) {
+                    musicStarted = true;
+                    playBgMusic();
+                }
+
+                const cakeRect = cakeWrapper.getBoundingClientRect();
+                const phoneRect = phone.getBoundingClientRect();
+                const cx = cakeRect.left - phoneRect.left + cakeRect.width / 2;
+                const cy = cakeRect.top - phoneRect.top + cakeRect.height / 2;
+                let count = 0;
+                if (burstInterval) clearInterval(burstInterval);
+                burstInterval = setInterval(() => {
+                    const n = 1 + Math.floor(Math.random() * 3);
+                    for (let i = 0; i < n; i++) createBlessingTag(cx, cy);
+                    count++;
+                    if (count % 100 === 0) {
+                        const tags = blessingContainer.querySelectorAll('.blessing-tag');
+                        if (tags.length > 300) {
+                            for (let i = 0; i < 100; i++) {
+                                if (tags[i] && tags[i].parentNode) tags[i].parentNode.removeChild(tags[i]);
+                            }
+                        }
+                    }
+                }, 160);
+                for (let i = 0; i < 12; i++) setTimeout(() => createBlessingTag(cx, cy), i * 60);
+            }
+
+            function createBlessingTag(cx, cy) {
+                const el = document.createElement('div');
+                el.className = 'blessing-tag';
+                const text = BLESSINGS[Math.floor(Math.random() * BLESSINGS.length)];
+                const color = PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)];
+                el.textContent = text;
+                el.style.backgroundColor = color;
+                el.style.color = '#3a2a1a';
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 40 + Math.random() * 220;
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist - 30;
+                const rot = (Math.random() - 0.5) * 30;
+                const scale = 0.5 + Math.random() * 0.8;
+                el.style.left = cx + 'px';
+                el.style.top = cy + 'px';
+                el.style.transform = `translate(-50%, -50%) scale(${scale * 0.2}) rotate(${rot}deg)`;
+                el.style.opacity = '0';
+                el.style.zIndex = 20;
+                blessingContainer.appendChild(el);
+                void el.offsetWidth;
+                const duration = 1600 + Math.random() * 1400;
+                const startTime = performance.now();
+                function animateTag(time) {
+                    const progress = (time - startTime) / duration;
+                    if (progress >= 1) {
+                        el.style.opacity = '0';
+                        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+                        return;
+                    }
+                    const t = 1 - Math.pow(1 - progress, 3);
+                    const currentX = cx + dx * t;
+                    const currentY = cy + dy * t - (1 - t) * 20;
+                    const currentScale = scale * (0.2 + 0.8 * t);
+                    const currentOpacity = Math.min(1, t * 1.8) * (1 - progress * 0.6);
+                    el.style.left = currentX + 'px';
+                    el.style.top = currentY + 'px';
+                    el.style.transform = `translate(-50%, -50%) scale(${currentScale}) rotate(${rot + t * 8}deg)`;
+                    el.style.opacity = currentOpacity;
+                    requestAnimationFrame(animateTag);
+                }
+                requestAnimationFrame(animateTag);
+            }
+
+            // ----- Audio -----
+            function getAudioContext() {
+                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                return audioCtx;
+            }
+            function playScratchSound() {
+                try {
+                    const ctx = getAudioContext();
+                    const bufferSize = ctx.sampleRate * 0.3;
+                    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        const t = i / bufferSize;
+                        const noise = (Math.random() * 2 - 1) * (1 - t * 0.9);
+                        const pitch = 400 + t * 800;
+                        const wave = Math.sin(t * pitch * 0.03) * 0.3;
+                        data[i] = noise * 0.5 + wave * (1 - t);
+                    }
+                    const src = ctx.createBufferSource();
+                    src.buffer = buffer;
+                    const gain = ctx.createGain();
+                    gain.gain.value = 0.4;
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    src.connect(gain);
+                    gain.connect(ctx.destination);
+                    src.start();
+                } catch(e) {}
+            }
+            function playPopSound() {
+                try {
+                    const ctx = getAudioContext();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.frequency.value = 1200;
+                    osc.type = 'sine';
+                    gain.gain.value = 0.15;
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.12);
+                } catch(e) {}
+            }
+            function playBgMusic() {
+                if (bgAudio) {
+                    bgAudio.play().catch(() => {});
+                    return;
+                }
+                try {
+                    bgAudio = new Audio();
+                    bgAudio.src = 'birthday.mp3';
+                    bgAudio.loop = true;
+                    bgAudio.volume = 0.5;
+                    bgAudio.load();
+                    bgAudio.play().catch(() => {
+                        // 如果第一次播放失败，监听加载完成再播
+                        const onReady = function() {
+                            bgAudio.play().catch(() => {});
+                            bgAudio.removeEventListener('canplaythrough', onReady);
+                        };
+                        bgAudio.addEventListener('canplaythrough', onReady);
+                        setTimeout(() => {
+                            bgAudio.play().catch(() => {});
+                            bgAudio.removeEventListener('canplaythrough', onReady);
+                        }, 3000);
+                    });
+                } catch(e) {}
+            }
+
+            // ----- Reset -----
+            function handleClose() {
+                if (bgAudio) { bgAudio.pause(); bgAudio.currentTime = 0; }
+                if (burstInterval) { clearInterval(burstInterval); burstInterval = null; }
+                if (particleSpawnInterval) { clearInterval(particleSpawnInterval); particleSpawnInterval = null; }
+                if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+                particles = []; particleCount = 0;
+                isLit = false; isBurning = false; burstActive = false; musicStarted = false;
+                body.classList.remove('party');
+                phone.classList.remove('party-mode');
+                partyBgText.classList.remove('show');
+                // ★★★ 重置标题也改为“许个愿吧” ★★★
+                headerText.innerHTML = '<span class="emoji">🎂</span> 许个愿吧 <span class="emoji">✨</span>';
+                matchHead.classList.remove('burning');
+                matchStick.style.position = 'absolute';
+                matchStick.style.left = '4px';
+                matchStick.style.top = '50%';
+                matchStick.style.transform = 'translateY(-50%)';
+                matchStick.style.opacity = '1';
+                matchStick.style.transition = 'left 0.05s linear, top 0.3s ease, transform 0.3s ease';
+                matchTrack.style.opacity = '1';
+                matchHint.textContent = '⟶ 向右拖动火柴';
+                matchHint.classList.remove('done');
+                matchHint.style.opacity = '1';
+                canvas.classList.remove('active');
+                canvas.style.opacity = '';
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                [flame1, flame2, flame3].forEach(f => f.classList.remove('active'));
+                blessingContainer.innerHTML = '';
+                if (cakeSvg) cakeSvg.style.opacity = '1';
+                if (flameContainer) flameContainer.style.opacity = '1';
+                if (matchArea) matchArea.style.opacity = '1';
+                matchStick.style.width = '';
+                matchStick.style.height = '';
+                bgAudio = null;
+            }
+            function handleSend() {
+                const btn = document.getElementById('btnSend');
+                btn.style.transform = 'scale(0.85)';
+                setTimeout(() => btn.style.transform = '', 200);
+                if (isLit) {
+                    const cakeRect = cakeWrapper.getBoundingClientRect();
+                    const phoneRect = phone.getBoundingClientRect();
+                    const cx = cakeRect.left - phoneRect.left + cakeRect.width / 2;
+                    const cy = cakeRect.top - phoneRect.top + cakeRect.height / 2;
+                    for (let i = 0; i < 8; i++) setTimeout(() => createBlessingTag(cx, cy), i * 80);
+                }
+            }
+            function handleMake() {
+                handleClose();
+                setTimeout(() => {
+                    matchHint.textContent = '✨ 重新开始！拖动火柴 ✨';
+                    matchHint.style.opacity = '1';
+                    setTimeout(() => { matchHint.textContent = '⟶ 向右拖动火柴'; }, 1800);
+                }, 300);
+            }
+
+            function init() {
+                resizeCanvas();
+                const track = matchTrack;
+                track.addEventListener('mousedown', startDrag);
+                document.addEventListener('mousemove', moveDrag);
+                document.addEventListener('mouseup', endDrag);
+                track.addEventListener('touchstart', startDrag, { passive: false });
+                document.addEventListener('touchmove', moveDrag, { passive: false });
+                document.addEventListener('touchend', endDrag, { passive: false });
+                document.getElementById('btnClose').addEventListener('click', handleClose);
+                document.getElementById('btnSend').addEventListener('click', handleSend);
+                document.getElementById('btnMake').addEventListener('click', handleMake);
+                window.addEventListener('resize', () => { getTrackWidth(); });
+                getTrackWidth();
+                console.log('🎂 Aaron 23岁生日祝福已准备 — 拖动火柴点燃蜡烛！');
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
+        })();
+    </script>
+</body>
+</html>
